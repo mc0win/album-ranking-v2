@@ -7,11 +7,11 @@ import json
 app = FastAPI()
 
 @app.on_event("startup")
-def on_startup():
+async def on_startup():
     create_db_and_tables()
 
 @app.get("/albums/{album_id}")
-def read_album(album_id: int, session: Session = Depends(get_session)):
+async def read_album(album_id: int, session: Session = Depends(get_session)):
     db_album = session.query(models.Album).filter(models.Album.id == album_id).first()
     if db_album is None:
         raise HTTPException(status_code=404, detail="Album not found")
