@@ -12,9 +12,9 @@ from sqlalchemy.orm import relationship
 from .database import Base
 import uuid
 
-
 class Session(Base):
     __tablename__ = "sessions"
+    
     id = Column(String(32), primary_key=True, default=uuid.uuid4)  # UUID stored as string
     telegram_id = Column(Integer, nullable=False, index=True)
     username = Column(String, nullable=True, index=True)
@@ -23,6 +23,7 @@ class Session(Base):
 
 class Config(Base):
     __tablename__ = "config"
+
     id = Column(Integer, primary_key=True)
     current_round = Column(Integer, default=1)
     current_order_number = Column(Integer)
@@ -32,6 +33,7 @@ class Config(Base):
 
 class UserAlbumSubmission(Base):
     __tablename__ = "user_album_submissions"
+
     id = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(String, nullable=False)
     album_id = Column(Integer, ForeignKey("albums.id"), nullable=False)
