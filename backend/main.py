@@ -108,20 +108,22 @@ async def change_config(current_round: int = None, current_order_number: int = N
     if not db_config:
         if (current_round is not None and current_order_number is not None and max_submissions is not None and submissions_open is not None):
             db_config = models.Config(current_round=current_round, current_order_number=current_order_number, max_submissions=max_submissions)
-            session.app(db_config)
+            session.add(db_config)
             session.commit()
             session.refresh(db_config)
             return db_config
         raise HTTPException(status_code=404, detail='Config not found')
-    session.execute(
-        update(models.Config), 
-        [models.Config(
-            id=1,
+    update_config = models.Config(
+            id=db_config.id,
             current_round=(current_round if current_round is not None else db_config.current_round),
             current_order_number=(current_order_number if current_order_number is not None else db_config.current_order_number),
             max_submissions=(max_submissions if max_submissions is not None else db_config.max_submissions),
             submissions_open=(submissions_open if submissions_open is not None else db_config.submissions_open)
-        ).__dict__]
+        ).__dict__
+    update_config.pop('_sa_instance_state')
+    session.execute(
+        update(models.Config), 
+        [update_config]
     )
     session.commit()
     session.refresh(db_config)
