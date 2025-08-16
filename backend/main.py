@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Depends, HTTPException, Query
+from fastapi.middleware.cors import CORSMiddleware
 from typing import Annotated
 from sqlalchemy.orm import Session
 from sqlalchemy import true, and_, update
@@ -8,9 +9,21 @@ from .core.api import processUrl
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins='http://localhost:5173',
+    allow_credentials=True,
+    allow_methods=['*'],
+    allow_headers=['*'],
+)
+
 @app.on_event('startup') 
 async def on_startup():
     create_db_and_tables()
+
+@app.get("/")
+async def root():
+    return {"message": "Welcome to Album Ranking API"}
 
 @app.get('/albums/')
 async def get_albums(round_number: int = None, artist: str = None, name: str = None, release_year: int | None = None, session: Session = Depends(get_session)):

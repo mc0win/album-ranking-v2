@@ -24,8 +24,8 @@ def processSpotify(url: str):
 
 def processDiscogs(source: str, url: str):
     tracklist = {}
-    id = re.findall(r"\/(\d+)",url)[0]
-    if source == "discogs-master":
+    id = re.findall(r'\/(\d+)',url)[0]
+    if source == 'discogs-master':
         album = d.master(id)
     else:
         album = d.release(id)

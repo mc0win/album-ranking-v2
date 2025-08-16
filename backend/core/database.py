@@ -4,13 +4,13 @@ import os
 
 
 Base = declarative_base()
-db_filename = "app.db"
+db_filename = 'app.db'
 db_path = os.path.join(os.getcwd(), db_filename)
 
 engine = create_engine(
-    f"sqlite:///{db_path}",
+    f'sqlite:///{db_path}',
     echo=False,
-    connect_args={"check_same_thread": False},
+    connect_args={'check_same_thread': False},
 )
 SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)
 

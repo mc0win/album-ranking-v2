@@ -3,6 +3,7 @@ __pycache__
 app.db
 frontend
 .cache
+.vscode
 
 # Output
 .output
