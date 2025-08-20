@@ -5,10 +5,12 @@ from sqlalchemy import (
     Boolean,
     UniqueConstraint,
     ForeignKey,
+    Time,
     DateTime,
 )
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base, scoped_session, relationship
+from datetime import time
 import os
 import uuid
 
@@ -34,6 +36,9 @@ class Config(Base):
     current_order_number = Column(Integer, default=1)
     max_submissions = Column(Integer, default=2)
     submissions_open = Column(Boolean, default=False)
+    max_duration = Column(Time, default=time(hour=2))
+    max_tracks = Column(Integer, default=30)
+    min_tracks = Column(Integer, default=7)
 
 
 class UserAlbumSubmission(Base):
@@ -51,7 +56,10 @@ class Album(Base):
     artist = Column(String, nullable=False)
     name = Column(String, nullable=False)
     release_year = Column(Integer)
+    duration = Column(Time, nullable=False)
+    total_tracks = Column(Integer, nullable=False)
     round_number = Column(Integer, nullable=False)
+    cover = Column(String, nullable=False)
     order_number = Column(Integer)
 
     __table_args__ = (
