@@ -4,7 +4,7 @@ from fastapi.responses import JSONResponse
 from contextlib import asynccontextmanager
 from typing import Annotated
 from sqlalchemy.orm import Session
-from sqlalchemy import true, and_, or_, update
+from sqlalchemy import true, and_, or_, update, func
 from .core.database import (
     get_session,
     create_db_and_tables,
@@ -48,24 +48,29 @@ async def get_albums(
     artist: str = None,
     name: str = None,
     release_year: int | None = None,
+    config: bool = False,
     session: Session = Depends(get_session),
 ):
     config = session.query(Config).first()
-    db_albums = (
-        session.query(Album)
-        .where(
-            (Album.artist == artist) if artist is not None else true(),
-            (Album.name == name) if name is not None else true(),
-            (
-                (Album.release_year == release_year)
-                if release_year is not None
-                else true()
-            ),
-            (Album.round_number == config.current_round),
-            (Album.order_number < config.current_order_number),
-        )
-        .all()
+    db_albums = session.query(Album).where(
+        (Album.artist == artist) if artist is not None else true(),
+        (Album.name == name) if name is not None else true(),
+        ((Album.release_year == release_year) if release_year is not None else true()),
     )
+    if config:
+        db_albums = (
+            db_albums.where(
+                (Album.round_number < config.current_round),
+            ).all()
+            + db_albums.where(
+                and_(
+                    (Album.order_number < config.current_order_number),
+                    (Album.round_number == config.current_round),
+                )
+            ).all()
+        )
+    else:
+        db_albums = db_albums.all()
     if len(db_albums) == 0:
         raise HTTPException(status_code=404, detail="Альбомы не найдены.")
     return db_albums
@@ -299,11 +304,45 @@ async def get_tracks(
 
 
 @app.get("/tracks/{track_id}")
-async def get_track_info(track_id: int, session: Session = Depends(get_session)):
-    db_track = session.query(Ranking).where(Ranking.track_id == track_id).all()
-    if len(db_track) == 0:
+async def get_track_rankings(
+    track_id: int, username: str = None, session: Session = Depends(get_session)
+):
+    db_rankings = (
+        session.query(Ranking)
+        .where(
+            Ranking.track_id == track_id,
+            (Ranking.username == username) if username is not None else true(),
+        )
+        .all()
+    )
+    if len(db_rankings) == 0:
         raise HTTPException(status_code=404, detail="Оценки не найдены.")
-    return db_track
+    return db_rankings
+
+
+@app.get("/rankings/{album_id}")
+async def get_album_rankings(album_id: int, session: Session = Depends(get_session)):
+    db_tracks = session.query(Track).where(Track.album_id == album_id).all()
+    if not session.query(Ranking).where(Ranking.track_id == db_tracks[0].id).first():
+        raise HTTPException(status_code=404, detail="У альбома нет ранкингов.")
+    db_rankings = []
+    for track in db_tracks:
+        rankings = []
+        i = 0
+        for ranking in session.query(Ranking).where(Ranking.track_id == track.id).all():
+            rankings.append(
+                {"username": ranking.username, "placement": ranking.placement}
+            )
+            i += 1
+        placements = [dict["placement"] for dict in rankings]
+        db_rankings.append(
+            {
+                "track_name": track.track_name,
+                "rankings": rankings,
+                "placement": round(sum(placements) / len(placements) * 100) / 100,
+            }
+        )
+    return sorted(db_rankings, key=lambda d: d["placement"])
 
 
 @app.get("/config/")

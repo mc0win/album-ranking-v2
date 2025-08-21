@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Sortable from 'sortablejs';
 	import { onMount } from 'svelte';
-	import type { Track } from './schemas';
+	import type { Track } from '../schemas';
 
 	const useSortable = (getter: () => HTMLElement | null, options?: Sortable.Options) => {
 		$effect(() => {
@@ -30,7 +30,7 @@
 				let i = 1;
 				for (let item of children) {
 					const string_id = item.getAttribute('data-id');
-					ids.push(parseInt(!(string_id === null) ? string_id : ''));
+					ids.push(parseInt(!(string_id === null) ? string_id : '') + 1);
 					item.children[0].innerHTML = i.toString();
 					i++;
 				}
@@ -45,19 +45,19 @@
 	<div></div>
 {:then tracks}
 	<div class="pb-2 pt-2">
-		<div class="border-accent-foreground rounded-lg border">
+		<div class="bg-background dark:border-input overflow-hidden rounded-lg border select-none">
 			<div bind:this={sortable}>
 				{#each tracks as track, i}
 					<div
 						data-id={i}
-						class="border-accent-foreground flex h-12 cursor-grab [&:not(:last-child)]:border-b"
+						class="bg-background shadow-xs hover:bg-accent dark:bg-input/30 dark:border-input dark:hover:bg-input/50 flex h-12 cursor-grab [&:not(:last-child)]:border-b"
 					>
 						<div
-							class="border-accent-foreground flex h-12 w-12 items-center justify-center border-r text-xl"
+							class="hover:text-accent-foreground dark:border-input flex h-12 w-12 items-center justify-center border-r text-xl"
 						>
 							{i + 1}
 						</div>
-						<div class="flex items-center pl-4">
+						<div class="hover:text-accent-foreground flex items-center pl-4">
 							{track.track_name}
 						</div>
 					</div>

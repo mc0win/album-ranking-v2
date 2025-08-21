@@ -6,7 +6,7 @@
 	import SortableList from './SortableList.svelte';
 	import { toast } from 'svelte-sonner';
 	import { zod4Client } from 'sveltekit-superforms/adapters';
-	import { rankingSchema } from './schemas';
+	import { rankingSchema } from '../schemas';
 
 	let { data } = $props();
 
@@ -33,7 +33,7 @@
 </script>
 
 {#await data.tracks}
-	<Skeleton class="h-[600px] w-full max-w-4xl rounded-lg " />
+	<Skeleton class="bg-background dark:bg-input/30 h-[600px] w-full max-w-4xl rounded-lg " />
 {:then tracks}
 	{#if !(typeof tracks === 'string')}
 		<form
@@ -72,6 +72,6 @@
 			<Form.Button class="h-14" variant="outline">Отправить оценки</Form.Button>
 		</form>
 	{:else}
-		<p class="w-full max-w-4xl text-center text-gray-500">{tracks}</p>
+		<p class="w-full max-w-4xl text-center text-gray-500 select-none">{tracks}</p>
 	{/if}
 {/await}

@@ -13,7 +13,7 @@ export const actions = {
 
         async function getRanking(track_id: string | null) {
             try {
-                const response = await fetch('http://127.0.0.1:8000/tracks/' + track_id);
+                const response = await fetch('http://127.0.0.1:8000/tracks/' + track_id + "?username=" + data.username);
                 return { server: true, success: response.ok }
             }
             catch {

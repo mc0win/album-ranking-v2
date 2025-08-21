@@ -4,10 +4,10 @@
 	import { toggleMode } from 'mode-watcher';
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
-	import RankingForm from './ranking-form.svelte';
-	import SubmitForm from './submit-form.svelte';
+	import RankingForm from './components/RankingForm.svelte';
+	import SubmitForm from './components/SubmitForm.svelte';
 	import type { PageProps } from './$types';
-	import WatchPage from './watch-rankings.svelte';
+	import WatchPage from './components/WatchPage.svelte';
 
 	let { data }: PageProps = $props();
 </script>
@@ -24,7 +24,7 @@
 	</Button>
 	<div class="flex w-full max-w-4xl justify-evenly space-x-4">
 		<Tabs.Root value="ranking" class="relative w-full">
-			<Tabs.List class="w-full">
+			<Tabs.List class="bg-background dark:bg-input/30 w-full shadow-sm">
 				<Tabs.Trigger value="ranking" class="w-1/3">Оценить альбом</Tabs.Trigger>
 				<Tabs.Trigger value="submit" class="w-1/3">Добавить альбом</Tabs.Trigger>
 				<Tabs.Trigger value="watch" class="w-1/3">Посмотреть оценки</Tabs.Trigger>

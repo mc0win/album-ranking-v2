@@ -39,3 +39,23 @@ export class Album {
         this.cover = "https://i.discogs.com/bmfLrSi2cDLqYCPMbZoju2i4rB-RtIhEdVVUGmCaTYI/rs:fit/g:sm/q:90/h:600/w:595/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI0NDMy/LTEyMTE1Njk3MDku/anBlZw.jpeg";
     }
 }
+
+export class Rankings {
+    username: string;
+    placement: number;
+    constructor() {
+        this.username = "Joosenitsa"
+        this.placement = 1
+    }
+}
+
+export class Ranking {
+    track_name: string;
+    rankings: Rankings[];
+    placement: number;
+    constructor() {
+        this.track_name = "Magic Window"
+        this.rankings = [new Rankings]
+        this.placement = 1
+    }
+}

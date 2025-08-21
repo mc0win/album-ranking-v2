@@ -4,9 +4,8 @@
 	import * as Select from '$lib/components/ui/select/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
 	import { zod4Client } from 'sveltekit-superforms/adapters';
-	import { submitSchema } from './schemas';
+	import { submitSchema, Album } from '../schemas';
 	import { toast } from 'svelte-sonner';
-	import { Album } from './schemas';
 	let { data } = $props();
 
 	const form = superForm(data.submitForm, {
