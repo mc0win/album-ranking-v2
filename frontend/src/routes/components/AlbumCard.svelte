@@ -4,7 +4,7 @@
 	import { Skeleton } from '$lib/components/ui/skeleton';
 	import type { Ranking } from '../schemas';
 	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
-	let { data, id } = $props();
+	let { data } = $props();
 
 	async function getRankings(): Promise<Ranking[] | string> {
 		try {
@@ -89,7 +89,7 @@
 	<Dialog.Root bind:open={isRankingsDialogOpen} onOpenChange={requestAlbum}>
 		<Dialog.Trigger>
 			<div
-				class="shadow-accent hover:transform-[scale(1.03)] duration-50 cursor-pointer overflow-hidden rounded-lg border border-4 shadow-lg transition-all ease-in"
+				class="shadow-accent hover:transform-[scale(1.03)] duration-50 cursor-pointer overflow-hidden rounded-lg border-4 shadow-lg transition-all ease-in"
 			>
 				<img alt={album.name} src={album.cover} class="pointer-events-none select-none" />
 			</div>
@@ -112,7 +112,7 @@
 										role="button"
 										tabindex={i}
 										onkeydown={() => {}}
-										class="bg-background shadow-xs hover:bg-accent dark:bg-input/30 dark:border-input dark:hover:bg-input/50 flex h-12 cursor-pointer [&:not(:last-child)]:border-b"
+										class="bg-background hover:bg-accent dark:bg-input/30 dark:border-input dark:hover:bg-input/50 flex h-12 cursor-pointer [&:not(:last-child)]:border-b"
 										onclick={() => {
 											isRankingsDialogOpen = !isRankingsDialogOpen;
 											UserRankingDialog = {

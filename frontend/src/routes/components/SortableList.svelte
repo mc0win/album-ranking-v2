@@ -30,7 +30,7 @@
 				let i = 1;
 				for (let item of children) {
 					const string_id = item.getAttribute('data-id');
-					ids.push(parseInt(!(string_id === null) ? string_id : '') + 1);
+					ids.push(parseInt(!(string_id === null) ? string_id : ''));
 					item.children[0].innerHTML = i.toString();
 					i++;
 				}
@@ -45,12 +45,12 @@
 	<div></div>
 {:then tracks}
 	<div class="pb-2 pt-2">
-		<div class="bg-background dark:border-input overflow-hidden rounded-lg border select-none">
+		<div class="bg-background dark:border-input select-none overflow-hidden rounded-lg border">
 			<div bind:this={sortable}>
 				{#each tracks as track, i}
 					<div
-						data-id={i}
-						class="bg-background shadow-xs hover:bg-accent dark:bg-input/30 dark:border-input dark:hover:bg-input/50 flex h-12 cursor-grab [&:not(:last-child)]:border-b"
+						data-id={i + 1}
+						class="bg-background hover:bg-accent dark:bg-input/30 dark:border-input dark:hover:bg-input/50 flex h-12 cursor-grab [&:not(:last-child)]:border-b"
 					>
 						<div
 							class="hover:text-accent-foreground dark:border-input flex h-12 w-12 items-center justify-center border-r text-xl"

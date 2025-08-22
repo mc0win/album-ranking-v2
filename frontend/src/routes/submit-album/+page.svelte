@@ -1,10 +1,10 @@
 <script lang="ts">
-	import RankingForm from './components/RankingForm.svelte';
+	import SubmitForm from '../components/SubmitForm.svelte';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
 </script>
 
 <div class="flex flex-col items-center space-y-4 p-2">
-	<RankingForm {data} />
+	<SubmitForm {data} />
 </div>

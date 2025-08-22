@@ -1,4 +1,3 @@
-import type { Time } from '@internationalized/date';
 import { z } from 'zod/v4';
 
 export const submitSchema = z.object({

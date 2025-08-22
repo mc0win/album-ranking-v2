@@ -72,6 +72,6 @@
 			<Form.Button class="h-14" variant="outline">Отправить оценки</Form.Button>
 		</form>
 	{:else}
-		<p class="w-full max-w-4xl text-center text-gray-500 select-none">{tracks}</p>
+		<p class="w-full max-w-4xl select-none text-center text-gray-500">{tracks}</p>
 	{/if}
 {/await}
