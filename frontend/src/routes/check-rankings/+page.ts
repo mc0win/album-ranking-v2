@@ -1,6 +1,6 @@
 import type { PageLoad } from "../$types"
 
-async function getAlbums(): Promise<string[] | string> {
+async function getAlbums(fetch: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>): Promise<string[] | string> {
     try {
         const response = await fetch('http://127.0.0.1:8000/albums/');
         const json = await response.json();
@@ -10,8 +10,8 @@ async function getAlbums(): Promise<string[] | string> {
     }
 }
 
-export const load: PageLoad = async ({}) => {
+export const load: PageLoad = async ({ fetch }) => {
     return {
-        albums: getAlbums()
+        albums: getAlbums(fetch)
     }
 }
