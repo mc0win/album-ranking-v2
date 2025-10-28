@@ -14,18 +14,55 @@ from datetime import time
 import os
 import uuid
 
+users = [
+    {"username": "aratorii", "telegram_id": 935125635, "admin_rights": False},
+    {"username": "astigm4tism", "telegram_id": 707644429, "admin_rights": False},
+    {"username": "Autiat", "telegram_id": 544793092, "admin_rights": False},
+    {"username": "Aze", "telegram_id": 1023262053, "admin_rights": False},
+    {"username": "belowdecent", "telegram_id": 1107896633, "admin_rights": False},
+    {"username": "doriackiy", "telegram_id": 928996843, "admin_rights": False},
+    {"username": "HeNCaF", "telegram_id": 1112776659, "admin_rights": False},
+    {"username": "Hindeko", "telegram_id": 769816585, "admin_rights": False},
+    {"username": "horriblemuck", "telegram_id": 741181098, "admin_rights": False},
+    {"username": "Joosenitsa", "telegram_id": 1420576606, "admin_rights": True},
+    {"username": "Lemerik", "telegram_id": 996791592, "admin_rights": False},
+    {"username": "mcowin", "telegram_id": 5042869688, "admin_rights": False},
+    {"username": "morph", "telegram_id": 628535845, "admin_rights": False},
+    {"username": "MotokEkb", "telegram_id": 833178165, "admin_rights": False},
+    {"username": "MyTaHT_CEBA", "telegram_id": 1297870775, "admin_rights": False},
+    {"username": "Nemsyao", "telegram_id": 428081566, "admin_rights": False},
+    {"username": "nika", "telegram_id": 1151195486, "admin_rights": False},
+    {"username": "noblefoul", "telegram_id": 930347542, "admin_rights": False},
+    {"username": "oqua", "telegram_id": 5094942756, "admin_rights": False},
+    {"username": "Owleren", "telegram_id": 8196158214, "admin_rights": False},
+    {"username": "retsaya", "telegram_id": 1442296055, "admin_rights": False},
+    {"username": "sailisy", "telegram_id": 5387114762, "admin_rights": False},
+    {"username": "snowy", "telegram_id": 724113434, "admin_rights": False},
+    {"username": "tearsfroze", "telegram_id": 413228476, "admin_rights": False},
+    {"username": "truelyalyaa", "telegram_id": 912139122, "admin_rights": False},
+    {"username": "vomit", "telegram_id": 6777289608, "admin_rights": False},
+    {"username": "water667", "telegram_id": 1541527187, "admin_rights": False},
+]
+
 Base = declarative_base()
 
 
 class Session(Base):
     __tablename__ = "sessions"
 
-    id = Column(
-        String(32), primary_key=True, default=uuid.uuid4
-    )  # UUID stored as string
-    telegram_id = Column(Integer, nullable=False, index=True)
-    username = Column(String, nullable=True, index=True)
+    id = Column(String(32), primary_key=True, default=str(uuid.uuid4()))
+    telegram_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     expires_at = Column(DateTime, nullable=False, index=True)
+
+
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True)
+    username = Column(String, nullable=False)
+    admin_rights = Column(Boolean, nullable=False)
+
+    __table_args__ = (UniqueConstraint("username", "id", name="uix_user_id"),)
 
 
 class Config(Base):
@@ -121,5 +158,19 @@ def create_db_and_tables():
             session.add(db_config)
             session.commit()
             session.refresh(db_config)
-            session.close()
+        for user in users:
+            if (
+                session.query(User)
+                .where(User.id == user["telegram_id"])
+                .first()
+                is None
+            ):
+                db_user = User(
+                    id=user["telegram_id"],
+                    username=user["username"],
+                    admin_rights=user["admin_rights"],
+                )
+                session.add(db_user)
+                session.commit()
+                session.refresh(db_user)
         session.close()
